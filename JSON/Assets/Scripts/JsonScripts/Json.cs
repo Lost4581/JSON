@@ -81,5 +81,27 @@ public static class CSVUtils
         string jsonFilePath = Path.Combine(Application.dataPath, _resoursesFolderName, _jsonFileName);
         File.WriteAllText(jsonFilePath, json);
     }
+
+    [MenuItem("Json Tools/Read and debug JSON")]
+    public static bool TryReadJson(out DataBase dataBase)
+    {
+        dataBase = new();
+        string jsonFilePath = Path.Combine(Application.dataPath, _resoursesFolderName, _jsonFileName);
+
+        if (!File.Exists(jsonFilePath))
+        {
+            Debug.Log($"No json file at {jsonFilePath}");
+            return false;
+        }
+
+        string json = File.ReadAllText(jsonFilePath);
+        dataBase = JsonConvert.DeserializeObject<DataBase>(json);
+
+        foreach (Data data in dataBase.DataInstances)
+        {
+            Debug.Log($"{data.Name}: {data.Description}");
+        }
+        return true;
+    }
 }
 
